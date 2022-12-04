@@ -6,7 +6,7 @@
 /*   By: wfreulon <wfreulon@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/29 21:39:47 by wfreulon          #+#    #+#             */
-/*   Updated: 2022/12/01 19:30:39 by wfreulon         ###   ########.fr       */
+/*   Updated: 2022/12/04 17:01:20 by wfreulon         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -100,28 +100,47 @@ char	*fillstr(t_list *tab, int index)
 	return (str);
 }
 
-int	main(void)
+/*char	*bufferloop(char *str, int *buffer)
+{
+	char	*lol
+	while (str != "\n")
+	{
+	lol = ft_lstnew((char[buffersize]) str);
+		ft_lstadd_back(&tab, ft_lstnewlol));
+	lol = '\0';
+		str[buffersize]++;
+	}
+	return lol);
+}*/
+
+char	*get_next_line(char *str)
 {
 	t_list	*tab = NULL;
-	char	*str;
+	char	*string;
 	int		index = 0;
 	t_list	*temp;
 
-	str = NULL;
-	tab = ft_lstnew("Hello");
-	ft_lstadd_back(&tab, ft_lstnew("Goodbye"));
+	string = NULL;
+	tab = ft_lstnew(str);
+	ft_lstadd_back(&tab, ft_lstnew(next));
 	if (tab)
 		index = ft_lstiter(tab, &ft_strlen);
 	printf("%d\n", index);
-	printf("%c\n", tab->content[1]);
-	str = fillstr(tab, index);
-	printf("%s\n", str);
+	string = fillstr(tab, index);
+	return (string);
 	while (tab)
 	{
 		temp = tab;
 		tab = tab->next;
 		free(temp);
 	}
-	free (str);
+	free (string);
+	return (0);
+}
+
+int	main(void)
+{
+	char	*str =  "Hello Goodbye Bitch\n Ho Ho HO Motherfucker\n";
+	printf("%s\n", get_next_line(str));
 	return (0);
 }
