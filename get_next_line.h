@@ -6,7 +6,7 @@
 /*   By: wfreulon <wfreulon@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/28 23:04:16 by wfreulon          #+#    #+#             */
-/*   Updated: 2022/12/04 16:44:34 by wfreulon         ###   ########.fr       */
+/*   Updated: 2022/12/06 00:17:35 by wfreulon         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,9 +23,10 @@
 
 # ifndef BUFFER_SIZE
 
-#	define BUFFER_SIZE 40
+#	define BUFFER_SIZE 42
 
 # endif
+
 typedef struct s_list
 {
 	char			*content;
@@ -33,3 +34,11 @@ typedef struct s_list
 }					t_list;
 
 #endif
+
+t_list	*ft_lstnew(char *content);
+t_list	*ft_lstlast(t_list *lst);
+void	ft_lstadd_back(t_list **lst, t_list *new);
+int		ft_strlen(char *str);
+int		ft_lstiter(t_list *lst, int (*f)(char  *));
+char	*fillstr(t_list *tab, int index);
+char	*get_next_line(int fd);
