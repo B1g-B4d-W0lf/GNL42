@@ -6,7 +6,7 @@
 /*   By: wfreulon <wfreulon@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/29 21:39:47 by wfreulon          #+#    #+#             */
-/*   Updated: 2022/12/06 23:35:00 by wfreulon         ###   ########.fr       */
+/*   Updated: 2022/12/08 02:18:47 by wfreulon         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,7 @@ char	*fillstr(t_list *tab, int index)
 	return (str);
 }
 
-static int	checkbuffer(char c, char const *set)
+int	checkbuffer(char c, char const *set)
 {
 	int	i;
 
@@ -54,41 +54,51 @@ static int	checkbuffer(char c, char const *set)
 
 char	*get_next_line(int fd)
 {
-	t_list	*tab;
-	t_list	*temp;
-	char	*string;
-	char	buffer[BUFFER_SIZE];
-	int		index;
-	int		i;
+	t_list		*tab;
+	t_list		*temp;
+	static char	west[BUFFER_SIZE + 1];
+	char		*string;
+	char		str[BUFFER_SIZE + 1];
+	char		buffer[BUFFER_SIZE + 1];
+	int			index;
+	int			i;
 	//int		j;
 
 	string = NULL;
 	tab = NULL;
 	index = 0;
-	i = 0;
-	//j = 0;
-
+	i = -1;
+	if (west)
+	{
+		
+	}
 	read(fd, buffer, BUFFER_SIZE);
-	tab = ft_lstnew(buffer);
-	printf("1 %s\n", buffer);
-	printf("2bis %s\n", tab->content);
+	buffer[ft_strlen(buffer)] = '\0';
 	while (checkbuffer('\n', buffer) != 1)
+	{
+		ft_lstadd_back(&tab, ft_lstnew(buffer));
 		read(fd, buffer, BUFFER_SIZE);
-	ft_lstadd_back(&tab, ft_lstnew(buffer));
+		buffer[ft_strlen(buffer)] = '\0';
+	}
 	if (checkbuffer('\n', buffer) == 1)
 	{
-		while (buffer[i] != '\n')
-			i++;
+		while (buffer[++i] != '\n')
+			str[i] = buffer[i];
+		str[i] = '\0';
+		while (buffer[++i] != '\0')
+			west[i] = buffer[i];
+		west[i] = '\0';
+			
 	}
-	printf("2 %s\n", buffer);
+	ft_lstadd_back(&tab, ft_lstnew(str));
 	if (tab)
-		index = ft_lstiter(tab, &ft_strlen) + i;
-	printf("3 %d\n", index);
+		index = ft_lstiter(tab, &ft_strlen);
 	string = fillstr(tab, index);
 	while (tab)
 	{
 		temp = tab;
 		tab = tab->next;
+		free(temp->content);
 		free(temp);
 	}
 	return (string);

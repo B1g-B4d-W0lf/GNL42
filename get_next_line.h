@@ -6,7 +6,7 @@
 /*   By: wfreulon <wfreulon@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/28 23:04:16 by wfreulon          #+#    #+#             */
-/*   Updated: 2022/12/06 22:56:58 by wfreulon         ###   ########.fr       */
+/*   Updated: 2022/12/07 23:27:59 by wfreulon         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,8 +33,6 @@ typedef struct s_list
 	struct s_list	*next;
 }					t_list;
 
-#endif
-
 t_list	*ft_lstnew(char *content);
 t_list	*ft_lstlast(t_list *lst);
 void	ft_lstadd_back(t_list **lst, t_list *new);
@@ -42,3 +40,6 @@ int		ft_strlen(char *str);
 int		ft_lstiter(t_list *lst, int (*f)(char  *));
 char	*fillstr(t_list *tab, int index);
 char	*get_next_line(int fd);
+int		checkbuffer(char c, char const *set);
+
+#endif

@@ -6,7 +6,7 @@
 /*   By: wfreulon <wfreulon@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/29 21:40:26 by wfreulon          #+#    #+#             */
-/*   Updated: 2022/12/06 00:14:12 by wfreulon         ###   ########.fr       */
+/*   Updated: 2022/12/07 23:34:40 by wfreulon         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,11 +15,19 @@
 t_list	*ft_lstnew(char *content)
 {
 	t_list	*res;
+	int		i;
 
+	i = 0;
 	res = malloc(sizeof(t_list));
 	if (!res)
 		return (NULL);
-	res->content = content;
+	res->content = malloc((ft_strlen(content) + 1 * sizeof(char)));
+	while (content[i])
+	{
+		res->content[i] = content[i];
+		i++;
+	}
+	res->content[i] = '\0';
 	res->next = NULL;
 	return (res);
 }
@@ -46,7 +54,7 @@ void	ft_lstadd_back(t_list **lst, t_list *new)
 		temp->next = new;
 	}
 	else
-	*lst = new;
+		*lst = new;
 }
 
 int		ft_strlen(char *str)
