@@ -6,7 +6,7 @@
 /*   By: wfreulon <wfreulon@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/29 21:40:26 by wfreulon          #+#    #+#             */
-/*   Updated: 2022/12/07 23:34:40 by wfreulon         ###   ########.fr       */
+/*   Updated: 2022/12/09 03:01:01 by wfreulon         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,9 @@ t_list	*ft_lstnew(char *content)
 	res = malloc(sizeof(t_list));
 	if (!res)
 		return (NULL);
-	res->content = malloc((ft_strlen(content) + 1 * sizeof(char)));
+	res->content = malloc(((ft_strlen(content) + 1) * sizeof(char)));
+	if (!res->content)
+		return(NULL);
 	while (content[i])
 	{
 		res->content[i] = content[i];
@@ -80,4 +82,18 @@ int		ft_lstiter(t_list *lst, int (*f)(char  *))
 		lst = lst->next;
 	}
 	return (index);
+}
+
+int	checkbuffer(char c, char const *set)
+{
+	int	i;
+
+	i = 0;
+	while (set[i])
+	{
+		if (c == set[i])
+			return (1);
+		i++;
+	}
+	return (0);
 }
