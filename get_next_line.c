@@ -6,7 +6,7 @@
 /*   By: wfreulon <wfreulon@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/29 21:39:47 by wfreulon          #+#    #+#             */
-/*   Updated: 2022/12/10 00:31:53 by wfreulon         ###   ########.fr       */
+/*   Updated: 2022/12/10 23:56:01 by wfreulon         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,7 +67,7 @@ int	writetemp(char *temp, char *str)
 	return (i);
 }
 
-void	readit(int fd, char *west, t_list *tab)
+char	*readit(int fd, char *west, t_list **tab)
 {
 	char	buffer[BUFFER_SIZE + 1];
 	char	temp[BUFFER_SIZE + 1];
@@ -78,22 +78,30 @@ void	readit(int fd, char *west, t_list *tab)
 	buffer[output] = '\0';
 	while (checkbuffer('\n', buffer) != 1)
 	{
-		ft_lstadd_back(&tab, ft_lstnew(buffer));
+		ft_lstadd_back(tab, ft_lstnew(buffer));
+		printf("%s", (*tab)->content);
 		output = read(fd, buffer, BUFFER_SIZE);
 		buffer[output] = '\0';
 	}
 	if (checkbuffer('\n', buffer) == 1)
 	{
 		i = writetemp(temp, buffer);
-		ft_lstadd_back(&tab, ft_lstnew(temp));
-		writeover(west, &buffer[i]);
+		ft_lstadd_back(tab, ft_lstnew(temp));
+		printf("%s", (*tab)->content);
+		if (buffer[i] != '\0')
+		{
+			west = malloc((output - i + 1) * sizeof(char));
+			writeover(west, &buffer[i]);
+		}
 	}
+	
+	return (west);
 }
 
 char	*get_next_line(int fd)
 {
 	t_list		*tab;
-	static char	west[BUFFER_SIZE + 1];
+	static char	*west = NULL;
 	char		*string;
 	char		temp[BUFFER_SIZE + 1];
 	int			i;
@@ -101,15 +109,16 @@ char	*get_next_line(int fd)
 	string = NULL;
 	tab = NULL;
 	i = 0;
-	if (checkbuffer('\n', west) == 0 || checkbuffer('\n', west) == 1)
+	if (west != NULL)
 	{
 		i = writetemp(temp, west);
 		ft_lstadd_back(&tab, ft_lstnew(temp));
 		writeover(west, &west[i]);
 	}
-	if (checkbuffer('\n', tab->content) != 1)
+	if (!west)
 	{
-		readit(fd, west, tab);
+		west = readit(fd, west, &tab);
+		printf("%s", tab->content);
 	}
 	if (tab)
 		i = ft_lstiter(tab, &ft_strlen);

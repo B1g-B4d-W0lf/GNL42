@@ -6,7 +6,7 @@
 /*   By: wfreulon <wfreulon@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/28 23:04:16 by wfreulon          #+#    #+#             */
-/*   Updated: 2022/12/10 00:53:01 by wfreulon         ###   ########.fr       */
+/*   Updated: 2022/12/10 23:56:30 by wfreulon         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@
 # include <fcntl.h>
 
 # ifndef BUFFER_SIZE
-#  define BUFFER_SIZE 100
+#  define BUFFER_SIZE 2
 # endif
 
 typedef struct s_list
@@ -38,7 +38,7 @@ int		ft_lstiter(t_list *lst, int (*f)(char *, t_list *tab, int boolean));
 char	*fillstr(t_list *tab, int index);
 char	*get_next_line(int fd);
 int		checkbuffer(char c, char const *set);
-void	readit(int fd, char *west, t_list *tab);
+char	*readit(int fd, char *west, t_list **tab);
 int		writetemp(char *temp, char *str);
 void	writeover(char *strdest, char *strsrc);
 
