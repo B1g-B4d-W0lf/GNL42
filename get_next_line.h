@@ -6,7 +6,7 @@
 /*   By: wfreulon <wfreulon@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/28 23:04:16 by wfreulon          #+#    #+#             */
-/*   Updated: 2022/12/10 23:56:30 by wfreulon         ###   ########.fr       */
+/*   Updated: 2022/12/12 22:21:36 by wfreulon         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@
 # include <fcntl.h>
 
 # ifndef BUFFER_SIZE
-#  define BUFFER_SIZE 2
+#  define BUFFER_SIZE 42
 # endif
 
 typedef struct s_list

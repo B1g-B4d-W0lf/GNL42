@@ -6,7 +6,7 @@
 /*   By: wfreulon <wfreulon@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/29 21:40:26 by wfreulon          #+#    #+#             */
-/*   Updated: 2022/12/10 00:25:25 by wfreulon         ###   ########.fr       */
+/*   Updated: 2022/12/13 00:16:41 by wfreulon         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,15 +34,27 @@ t_list	*ft_lstnew(char *content)
 	return (res);
 }
 
+t_list	*ft_lstlast(t_list *lst)
+{
+	t_list	*last;
+
+	if (lst == NULL)
+		return (NULL);
+	while (lst->next != NULL)
+		lst = lst->next;
+	last = lst;
+	return (last);
+}
+
 void	ft_lstadd_back(t_list **lst, t_list *new)
 {
 	t_list	*temp;
 
 	if (lst && *lst)
 	{
-		while ((*lst)->next != NULL)
-			*lst = (*lst)->next;
-		temp = *lst;
+		//while ((*lst)->next != NULL)
+			//*lst = (*lst)->next;
+		temp = ft_lstlast(*lst);
 		temp->next = new;
 	}
 	else
@@ -100,4 +112,20 @@ int	checkbuffer(char c, char const *set)
 		i++;
 	}
 	return (0);
+}
+
+char	*ft_strchr(const char *str, int c)
+{
+	unsigned int	i;
+
+	i = 0;
+	while (str[i])
+	{
+		if ((char) c == str[i])
+			return ((char *)str + i);
+		i++;
+	}
+	if (str[i] == (char) c)
+		return ((char *)&str[i]);
+	return (NULL);
 }

@@ -6,7 +6,7 @@
 /*   By: wfreulon <wfreulon@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/29 21:39:47 by wfreulon          #+#    #+#             */
-/*   Updated: 2022/12/10 23:56:01 by wfreulon         ###   ########.fr       */
+/*   Updated: 2022/12/13 01:41:49 by wfreulon         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,24 +74,29 @@ char	*readit(int fd, char *west, t_list **tab)
 	int		i;
 	int		output;
 
+
 	output = read(fd, buffer, BUFFER_SIZE);
 	buffer[output] = '\0';
-	while (checkbuffer('\n', buffer) != 1)
+	while (checkbuffer('\n', buffer) != 1 && output != 0)
 	{
 		ft_lstadd_back(tab, ft_lstnew(buffer));
-		printf("%s", (*tab)->content);
+		// printf("buffer %s\n", (*tab)->content);
 		output = read(fd, buffer, BUFFER_SIZE);
 		buffer[output] = '\0';
 	}
 	if (checkbuffer('\n', buffer) == 1)
 	{
 		i = writetemp(temp, buffer);
+		//printf("temp : %s", temp);
 		ft_lstadd_back(tab, ft_lstnew(temp));
-		printf("%s", (*tab)->content);
+		// printf("temp %s\n", (*tab)->content);
 		if (buffer[i] != '\0')
 		{
 			west = malloc((output - i + 1) * sizeof(char));
+			if (west == NULL)
+				return (NULL);
 			writeover(west, &buffer[i]);
+			//printf("west : %s \n", west);
 		}
 	}
 	
@@ -109,40 +114,72 @@ char	*get_next_line(int fd)
 	string = NULL;
 	tab = NULL;
 	i = 0;
+	if (fd < 0 || BUFFER_SIZE <= 0 || read(fd, temp, 0) < 0)
+		return (NULL);
 	if (west != NULL)
 	{
 		i = writetemp(temp, west);
 		ft_lstadd_back(&tab, ft_lstnew(temp));
 		writeover(west, &west[i]);
+		if (west[0] == '\0')
+		{
+				free(west);
+				west = NULL;
+		}
 	}
-	if (!west)
+	if (west == NULL && (tab == NULL || checkbuffer('\n', tab->content) == 0))
 	{
 		west = readit(fd, west, &tab);
-		printf("%s", tab->content);
+		// printf("west %s\n", tab->content);
 	}
-	if (tab)
-		i = ft_lstiter(tab, &ft_strlen);
+	if (tab == NULL)
+		return (NULL);
+	i = ft_lstiter(tab, &ft_strlen);
 	string = fillstr(tab, i);
 	ft_strlen(0, tab, 0);
 	return (string);
 }
-
+/*
 int	main(void)
 {
 	int fd;
-	int	i = 0;
-	int	j = 17;
+	// int	i = 0;
+	// int	j = 17;
 	char *str;
 	
-	fd = open("uhuh", O_RDONLY);
-	while (i <= j)
+	fd = open("42", O_RDONLY);
+
+
+	
+	str = get_next_line(fd);
+	printf("%s", str);
+	free(str);
+	str = get_next_line(fd);
+	printf("%s", str);
+	free(str);
+	str = get_next_line(fd);
+	printf("%s", str);
+	free(str);
+	
+	str = get_next_line(fd);
+	printf("%s", str);
+	free(str);
+	str = get_next_line(fd);
+	printf("%s", str);
+	free(str);
+	str = get_next_line(fd);
+	printf("%s", str);
+	free(str);
+	str = get_next_line(fd);
+	printf("%s", str);
+	free(str);
+	str = get_next_line(fd);
+	printf("%s", str);
+	free(str);
+	
+	while((str = get_next_line(fd)))
 	{
-		str = get_next_line(fd);
 		printf("%s", str);
 		free(str);
-		i++;
 	}
-	if (close(fd) == -1)
-		printf("CLOSE FAILED");
-	return (0);
-}
+}*/
