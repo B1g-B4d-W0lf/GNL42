@@ -6,59 +6,58 @@
 /*   By: wfreulon <wfreulon@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/29 21:40:26 by wfreulon          #+#    #+#             */
-/*   Updated: 2022/12/13 00:16:41 by wfreulon         ###   ########.fr       */
+/*   Updated: 2022/12/14 00:42:04 by wfreulon         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
 
-t_list	*ft_lstnew(char *content)
+t_list	*ft_lstnew(char *content, t_list *lst, int boolean)
 {
 	t_list	*res;
 	int		i;
 
-	i = 0;
+	i = -1;
+	if (!boolean)
+	{
+		if (lst == NULL)
+			return (NULL);
+		while (lst->next != NULL)
+			lst = lst->next;
+		res = lst;
+		return (res);
+	}
 	res = malloc(sizeof(t_list));
 	if (!res)
 		return (NULL);
 	res->content = malloc(((ft_strlen(content, 0, 1) + 1) * sizeof(char)));
 	if (!res->content)
 		return (NULL);
-	while (content[i])
-	{
+	while (content[++i])
 		res->content[i] = content[i];
-		i++;
-	}
 	res->content[i] = '\0';
 	res->next = NULL;
 	return (res);
 }
 
-t_list	*ft_lstlast(t_list *lst)
-{
-	t_list	*last;
-
-	if (lst == NULL)
-		return (NULL);
-	while (lst->next != NULL)
-		lst = lst->next;
-	last = lst;
-	return (last);
-}
-
-void	ft_lstadd_back(t_list **lst, t_list *new)
+char	*ft_lstadd_back(t_list **lst, t_list *new, char *west, int boolean)
 {
 	t_list	*temp;
 
-	if (lst && *lst)
+	if (!boolean)
 	{
-		//while ((*lst)->next != NULL)
-			//*lst = (*lst)->next;
-		temp = ft_lstlast(*lst);
-		temp->next = new;
+		if (lst && *lst)
+		{
+			temp = ft_lstnew(0, *lst, 0);
+			temp->next = new;
+		}
+		else
+			*lst = new;
+		return (NULL);
 	}
-	else
-		*lst = new;
+	free(west);
+	west = NULL;
+	return (west);
 }
 
 int	ft_strlen(char *str, t_list *tab, int boolean)
@@ -112,20 +111,4 @@ int	checkbuffer(char c, char const *set)
 		i++;
 	}
 	return (0);
-}
-
-char	*ft_strchr(const char *str, int c)
-{
-	unsigned int	i;
-
-	i = 0;
-	while (str[i])
-	{
-		if ((char) c == str[i])
-			return ((char *)str + i);
-		i++;
-	}
-	if (str[i] == (char) c)
-		return ((char *)&str[i]);
-	return (NULL);
 }

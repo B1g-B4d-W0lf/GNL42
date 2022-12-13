@@ -6,7 +6,7 @@
 /*   By: wfreulon <wfreulon@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/28 23:04:16 by wfreulon          #+#    #+#             */
-/*   Updated: 2022/12/12 22:21:36 by wfreulon         ###   ########.fr       */
+/*   Updated: 2022/12/14 00:40:21 by wfreulon         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,15 +31,15 @@ typedef struct s_list
 	struct s_list	*next;
 }					t_list;
 
-t_list	*ft_lstnew(char *content);
-void	ft_lstadd_back(t_list **lst, t_list *new);
+t_list	*ft_lstnew(char *content, t_list *lst, int boolean);
+char	*ft_lstadd_back(t_list **lst, t_list *new, char *west, int boolean);
 int		ft_strlen(char *str, t_list *tab, int boolean);
 int		ft_lstiter(t_list *lst, int (*f)(char *, t_list *tab, int boolean));
 char	*fillstr(t_list *tab, int index);
 char	*get_next_line(int fd);
 int		checkbuffer(char c, char const *set);
 char	*readit(int fd, char *west, t_list **tab);
-int		writetemp(char *temp, char *str);
-void	writeover(char *strdest, char *strsrc);
+int		writetemp(char *temp, char *str, int boolean);
+char	*westigation(char *west, char *buffer, t_list **tab, int boolean);
 
 #endif

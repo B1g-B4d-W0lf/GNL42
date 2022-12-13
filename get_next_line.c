@@ -6,7 +6,7 @@
 /*   By: wfreulon <wfreulon@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/29 21:39:47 by wfreulon          #+#    #+#             */
-/*   Updated: 2022/12/13 01:41:49 by wfreulon         ###   ########.fr       */
+/*   Updated: 2022/12/14 00:41:03 by wfreulon         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,69 +38,83 @@ char	*fillstr(t_list *tab, int index)
 	return (str);
 }
 
-void	writeover(char *strdest, char *strsrc)
+int	writetemp(char *temp, char *str, int boolean)
 {
 	int		i;
 
 	i = 0;
-	while (strsrc[i])
+	if (!boolean)
 	{
-		strdest[i] = strsrc[i];
-		i++;
+		while (str[i])
+		{
+			temp[i] = str[i];
+			i++;
+		}
+		temp[i] = '\0';
+		return (0);
 	}
-	strdest[i] = '\0';
-}
-
-int	writetemp(char *temp, char *str)
-{
-	int		i;
-
-	i = 0;
 	while (str[i] != '\n' && str[i])
 	{
 		temp[i] = str[i];
 		i++;
 	}
 	temp[i] = str[i];
-	i++;
-	temp[i] = '\0';
+	if (temp[i] == '\n')
+	{
+		i++;
+		temp[i] = '\0';
+	}
 	return (i);
+}
+
+char	*westigation(char *west, char *buffer, t_list **tab, int boolean)
+{
+	char	*temp;
+	int		i;
+
+	temp = malloc((BUFFER_SIZE + 1) * sizeof(char));
+	if (temp == NULL)
+		return (NULL);
+	if (!boolean)
+	{
+		i = writetemp(temp, buffer, 1);
+		ft_lstadd_back(tab, ft_lstnew(temp, 0, 1), 0, 0);
+		if (buffer[i] != '\0')
+		{
+			west = malloc((BUFFER_SIZE + 1) * sizeof(char));
+			if (west == NULL)
+				return (NULL);
+			writetemp(west, &buffer[i], 0);
+		}
+		return (free(temp), west);
+	}
+	i = writetemp(temp, west, 1);
+	ft_lstadd_back(tab, ft_lstnew(temp, 0, 1), 0, 0);
+	writetemp(west, &west[i], 0);
+	return (free(temp), west);
 }
 
 char	*readit(int fd, char *west, t_list **tab)
 {
-	char	buffer[BUFFER_SIZE + 1];
-	char	temp[BUFFER_SIZE + 1];
-	int		i;
+	char	*buffer;
 	int		output;
 
-
+	buffer = malloc((BUFFER_SIZE + 1) * sizeof(char));
+	if (buffer == NULL)
+		return (NULL);
 	output = read(fd, buffer, BUFFER_SIZE);
 	buffer[output] = '\0';
 	while (checkbuffer('\n', buffer) != 1 && output != 0)
 	{
-		ft_lstadd_back(tab, ft_lstnew(buffer));
-		// printf("buffer %s\n", (*tab)->content);
+		ft_lstadd_back(tab, ft_lstnew(buffer, 0, 1), 0, 0);
 		output = read(fd, buffer, BUFFER_SIZE);
 		buffer[output] = '\0';
 	}
 	if (checkbuffer('\n', buffer) == 1)
 	{
-		i = writetemp(temp, buffer);
-		//printf("temp : %s", temp);
-		ft_lstadd_back(tab, ft_lstnew(temp));
-		// printf("temp %s\n", (*tab)->content);
-		if (buffer[i] != '\0')
-		{
-			west = malloc((output - i + 1) * sizeof(char));
-			if (west == NULL)
-				return (NULL);
-			writeover(west, &buffer[i]);
-			//printf("west : %s \n", west);
-		}
+		west = westigation(west, buffer, tab, 0);
 	}
-	
-	return (west);
+	return (free(buffer), west);
 }
 
 char	*get_next_line(int fd)
@@ -108,30 +122,21 @@ char	*get_next_line(int fd)
 	t_list		*tab;
 	static char	*west = NULL;
 	char		*string;
-	char		temp[BUFFER_SIZE + 1];
 	int			i;
 
 	string = NULL;
 	tab = NULL;
 	i = 0;
-	if (fd < 0 || BUFFER_SIZE <= 0 || read(fd, temp, 0) < 0)
+	if (fd < 0 || BUFFER_SIZE <= 0 || read(fd, string, 0) < 0)
 		return (NULL);
 	if (west != NULL)
 	{
-		i = writetemp(temp, west);
-		ft_lstadd_back(&tab, ft_lstnew(temp));
-		writeover(west, &west[i]);
+		west = westigation(west, 0, &tab, 1);
 		if (west[0] == '\0')
-		{
-				free(west);
-				west = NULL;
-		}
+			west = ft_lstadd_back(0, 0, west, 1);
 	}
 	if (west == NULL && (tab == NULL || checkbuffer('\n', tab->content) == 0))
-	{
 		west = readit(fd, west, &tab);
-		// printf("west %s\n", tab->content);
-	}
 	if (tab == NULL)
 		return (NULL);
 	i = ft_lstiter(tab, &ft_strlen);
@@ -139,34 +144,20 @@ char	*get_next_line(int fd)
 	ft_strlen(0, tab, 0);
 	return (string);
 }
-/*
-int	main(void)
+
+/*int	main(void)
 {
 	int fd;
 	// int	i = 0;
 	// int	j = 17;
 	char *str;
 	
-	fd = open("42", O_RDONLY);
+	fd = open("./tripouille/files/41_with_nl", O_RDONLY);
 
-
-	
-	str = get_next_line(fd);
-	printf("%s", str);
-	free(str);
-	str = get_next_line(fd);
-	printf("%s", str);
-	free(str);
 	str = get_next_line(fd);
 	printf("%s", str);
 	free(str);
 	
-	str = get_next_line(fd);
-	printf("%s", str);
-	free(str);
-	str = get_next_line(fd);
-	printf("%s", str);
-	free(str);
 	str = get_next_line(fd);
 	printf("%s", str);
 	free(str);
