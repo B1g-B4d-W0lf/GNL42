@@ -6,7 +6,7 @@
 /*   By: wfreulon <wfreulon@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/29 21:39:47 by wfreulon          #+#    #+#             */
-/*   Updated: 2022/12/14 00:41:03 by wfreulon         ###   ########.fr       */
+/*   Updated: 2022/12/21 00:22:44 by wfreulon         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -103,6 +103,8 @@ char	*readit(int fd, char *west, t_list **tab)
 	if (buffer == NULL)
 		return (NULL);
 	output = read(fd, buffer, BUFFER_SIZE);
+	if (output < 0)
+		return (free(buffer), NULL);
 	buffer[output] = '\0';
 	while (checkbuffer('\n', buffer) != 1 && output != 0)
 	{
@@ -127,7 +129,7 @@ char	*get_next_line(int fd)
 	string = NULL;
 	tab = NULL;
 	i = 0;
-	if (fd < 0 || BUFFER_SIZE <= 0 || read(fd, string, 0) < 0)
+	if (fd < 0 || BUFFER_SIZE <= 0)
 		return (NULL);
 	if (west != NULL)
 	{
@@ -144,33 +146,3 @@ char	*get_next_line(int fd)
 	ft_strlen(0, tab, 0);
 	return (string);
 }
-
-/*int	main(void)
-{
-	int fd;
-	// int	i = 0;
-	// int	j = 17;
-	char *str;
-	
-	fd = open("./tripouille/files/41_with_nl", O_RDONLY);
-
-	str = get_next_line(fd);
-	printf("%s", str);
-	free(str);
-	
-	str = get_next_line(fd);
-	printf("%s", str);
-	free(str);
-	str = get_next_line(fd);
-	printf("%s", str);
-	free(str);
-	str = get_next_line(fd);
-	printf("%s", str);
-	free(str);
-	
-	while((str = get_next_line(fd)))
-	{
-		printf("%s", str);
-		free(str);
-	}
-}*/
